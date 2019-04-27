@@ -43,8 +43,10 @@ module Shortener::Url
       end
     end
 
-    def queue_crawler(obj)
-      "redis-sidekiq queue to get the title"
+    def queue_crawler(shorten)
+      # todo send to sidekiq
+      bot = Crawler::Bot.new(shorten)
+      bot.start
     end
   end
 end
