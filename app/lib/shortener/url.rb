@@ -1,27 +1,49 @@
+require 'uri'
+
 module Shortener::Url
   class << self
 
     def generate(url)
       @url = url
-      store if valid?(@url)
+      valid?(@url) ? store : @error
     end
 
     def read(short_url)
-      "retrive ulr"
+      shorten = ShortenerUrl.find_by(shorten_url: short_url)
+      if shorten
+        shorten.original_url
+      else
+        error('Url does not exists')
+      end
     end
 
     def valid?(url=@url)
-      true
+      begin
+        uri = URI.parse(url)
+        uri.kind_of?(URI::HTTP) or uri.kind_of?(URI::HTTPS) ? true : error("Invalid URL")
+      rescue
+        error("Invalid URL")
+      end
+    end
+
+    def error(message)
+      @error = message
     end
 
     private
 
     def store
-      token = Shortener::Generator.run
-      "save in database"g
+      if shorten = ShortenerUrl.find_by(original_url: @url)
+        shorten.shorten_url
+      else
+        token   = Shortener::Generator.run
+        shorten = ShortenerUrl.create(original_url: @url, shorten_url: token)
+        queue_crawler(shorten)
+        token
+      end
     end
 
-    def queue_crawler
+    def queue_crawler(obj)
       "redis-sidekiq queue to get the title"
     end
   end
