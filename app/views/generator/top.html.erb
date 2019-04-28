@@ -1,0 +1,16 @@
+<H1>TOP 100 most visited urls</H1>
+
+<table>
+	<thead>
+		<th>URL</th>
+		<th>SHORTER URL</th>
+		<th>VISITS</th>
+	</thead>
+	<% @urls.each do |url|%>
+		<tr>
+			<td><%= url.original_url %></td>
+			<td><%= url.shorten_url %></td>
+			<td><%= url.visits %></td>
+		</tr>
+	<%end%>
+</table>
