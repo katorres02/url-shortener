@@ -7,4 +7,7 @@ Rails.application.routes.draw do
       get 'top'
     end
   end
+
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
 end

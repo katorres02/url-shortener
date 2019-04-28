@@ -1,4 +1,5 @@
 require 'uri'
+require 'crawl_worker'
 
 module Shortener::Url
   class << self
@@ -44,9 +45,7 @@ module Shortener::Url
     end
 
     def queue_crawler(shorten)
-      # todo send to sidekiq
-      bot = Crawler::Bot.new(shorten)
-      bot.start
+      CrawlWorker.perform_async(shorten.id)
     end
   end
 end
