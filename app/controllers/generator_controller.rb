@@ -23,6 +23,6 @@ class GeneratorController < ApplicationController
   end
 
   def top
-    # 100 most visited
+    @urls = ShortenerUrl.order(visits: :desc).limit(100)
   end
 end

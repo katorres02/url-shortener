@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2019_04_27_194626) do
   create_table "shortener_urls", force: :cascade do |t|
     t.string "original_url"
     t.string "shorten_url"
-    t.integer "visits", default: 0
+    t.integer "visits", default: 1
     t.string "title", default: "Pending..."
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

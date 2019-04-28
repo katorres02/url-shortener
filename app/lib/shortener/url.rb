@@ -12,6 +12,7 @@ module Shortener::Url
     def read(short_url)
       shorten = ShortenerUrl.find_by(shorten_url: short_url)
       if shorten
+        increment_visits(shorten)
         { url: shorten.original_url, status: :ok }
       else
         error('Url does not exists')
@@ -36,6 +37,7 @@ module Shortener::Url
 
     def store
       if shorten = ShortenerUrl.find_by(original_url: @url)
+        increment_visits(shorten)
         { url: shorten.shorten_url, status: :ok }
       else
         token   = Shortener::Generator.run
@@ -47,6 +49,10 @@ module Shortener::Url
 
     def queue_crawler(shorten)
       CrawlWorker.perform_async(shorten.id)
+    end
+
+    def increment_visits(shortener_url)
+      shortener_url.update_attribute(:visits, shortener_url.visits + 1)
     end
   end
 end
