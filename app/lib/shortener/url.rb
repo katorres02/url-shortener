@@ -12,7 +12,7 @@ module Shortener::Url
     def read(short_url)
       shorten = ShortenerUrl.find_by(shorten_url: short_url)
       if shorten
-        shorten.original_url
+        { url: shorten.original_url, status: :ok }
       else
         error('Url does not exists')
       end
@@ -29,13 +29,14 @@ module Shortener::Url
 
     def error(message)
       @error = message
+      { message: @error, status: :error }
     end
 
     private
 
     def store
       if shorten = ShortenerUrl.find_by(original_url: @url)
-        shorten.shorten_url
+        { url: shorten.shorten_url, status: :ok }
       else
         token   = Shortener::Generator.run
         shorten = ShortenerUrl.create(original_url: @url, shorten_url: token)

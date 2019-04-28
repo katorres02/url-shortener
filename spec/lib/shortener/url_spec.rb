@@ -24,17 +24,17 @@ describe Shortener::Url do
 
     context 'read, retrieve' do
       it 'should retrive from database' do
-        expect(Shortener::Url.read(@token)).to eq('http://www.google.com')
+        expect(Shortener::Url.read(@token)[:url]).to eq('http://www.google.com')
       end
 
       it 'should retrive even if its a new record' do
-        expect(Shortener::Url.read(@token)).to eq('http://www.google.com')
+        expect(Shortener::Url.read(@token)[:url]).to eq('http://www.google.com')
         token = Shortener::Url.generate('http://www.facebook.com')
-        expect(Shortener::Url.read(token)).to eq('http://www.facebook.com')
+        expect(Shortener::Url.read(token)[:url]).to eq('http://www.facebook.com')
       end
 
       it 'should return error message' do
-        expect(Shortener::Url.read('xxxxx')).to eq('Url does not exists')
+        expect(Shortener::Url.read('xxxxx')[:message]).to eq('Url does not exists')
       end
     end
 
@@ -45,8 +45,8 @@ describe Shortener::Url do
       end
       
       it 'should return error message if invalid url' do
-        expect(Shortener::Url.valid?('dakdhojsdam')).to eq('Invalid URL')
-        expect(Shortener::Url.valid?('http:dasodjasdnbadja,dsa"')).to eq('Invalid URL')
+        expect(Shortener::Url.valid?('dakdhojsdam')[:message]).to eq('Invalid URL')
+        expect(Shortener::Url.valid?('http:dasodjasdnbadja,dsa"')[:message]).to eq('Invalid URL')
       end
     end
   end
