@@ -3,7 +3,11 @@ class GeneratorController < ApplicationController
 
   def show
     @response = Shortener::Url.read(params[:id])
-    render json: { response: @response }, status: :ok
+
+    respond_to do |format|
+      format.html { redirect_to @response }
+      format.json { render json: { response: @response }, status: :ok }
+    end
   end
 
   def create
