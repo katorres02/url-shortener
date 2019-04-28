@@ -23,6 +23,10 @@ class GeneratorController < ApplicationController
   end
 
   def top
-    # 100 most visited
+    @urls = ShortenerUrl.order(visits: :desc).limit(100)
+    respond_to do |format|
+      format.html
+      format.json { render json: @urls.select(:original_url, :shorten_url, :visits), status: :ok }
+    end
   end
 end
