@@ -49,6 +49,22 @@ describe Shortener::Url do
         expect(Shortener::Url.valid?('http:dasodjasdnbadja,dsa"')[:message]).to eq('Invalid URL')
       end
     end
-  end
 
+    context 'increment visits' do
+      it 'method increment should increment visit after read was called' do
+        shortener = ShortenerUrl.last
+        initial_count = shortener.visits
+        Shortener::Url.read(shortener.shorten_url)
+        expect(initial_count + 1).to eq(ShortenerUrl.last.visits)
+      end
+
+      it 'method increment should increment visit after generate was called' do
+        Shortener::Url.generate('http://www.facebook.com')
+        old_count = ShortenerUrl.find_by(original_url: 'http://www.facebook.com').visits
+        Shortener::Url.generate('http://www.facebook.com')
+        updated_count = ShortenerUrl.find_by(original_url: 'http://www.facebook.com').visits
+        expect(old_count + 1).to eq(updated_count)
+      end
+    end
+  end
 end
