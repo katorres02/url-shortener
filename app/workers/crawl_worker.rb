@@ -1,5 +1,6 @@
 class CrawlWorker
   include Sidekiq::Worker
+  sidekiq_options retry: false
 
   def perform(id)
   	shortener_url = ShortenerUrl.find(id)
